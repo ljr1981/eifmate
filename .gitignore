@@ -1,0 +1,42 @@
+﻿# Eiffel compilation outputs
+EIFGENs/
+EIFGEN/
+*.melted
+*.frozen
+*.finalized
+
+# Eiffel temporary files
+*.swp
+*.swo
+*~
+.*.sw?
+
+# Build artifacts
+*.exe
+*.dll
+*.obj
+*.lib
+*.exp
+*.pdb
+*.ilk
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.code-workspace
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Compressed files (unless needed)
+*.zip
+*.tar.gz
+*.7z

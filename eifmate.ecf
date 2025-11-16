@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd" name="eifmate" uuid="87DC576C-0CD3-4C0A-AE97-97E82EB6BE39" library_target="eifmate">
+	<target name="eifmate">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\..*$</exclude>
+		</file_rule>
+		<option warning="warning">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="dead_code_removal" value="feature"/>
+		<capability>
+			<concurrency use="thread"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="simple_json" location="D:\prod\simple_json\simple_json.ecf"/>
+		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="zlib" location="$ISE_LIBRARY\unstable\library\compression\zlib\zlib.ecf"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+	<target name="eifmate_tests" extends="eifmate">
+		<root class="APPLICATION" feature="make"/>
+		<option warning="warning">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<cluster name="test" location=".\testing\" recursive="true"/>
+	</target>
+	<target name="eifmate_cli" extends="eifmate_tests">
+		<description>CLI EXECUTABLE: The main bridge tool</description>
+		<root class="EM_CLI_APP" feature="make"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
+	</target>
+	<target name="eifmate_gui" extends="eifmate_tests">
+		<description>GUI monitor (Phase 6-7)</description>
+	</target>
+	<target name="eifmate_daemon" extends="eifmate_tests">
+		<description>Background watch service</description>
+	</target>
+	<target name="eifmate_server" extends="eifmate_tests">
+		<description>HTTP server mode</description>
+		<root class="EIFMATE_CLI_APP" feature="make"/>
+	</target>
+</system>

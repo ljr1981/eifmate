@@ -1,0 +1,18 @@
+{
+	"success": false,
+	"output": "Degree 6: Examining System\nDegree 5: Parsing Classes\nError code: VUTA(2)\nWhat to do: check whether feature name `do_nothing` is spelled correctly in a call or ensure that the feature is available to the class.\nClass: MY_CLASS\nFeature: make\n\nCompilation failed.",
+	"errors": [
+		{
+			"code": "VUTA(2)",
+			"message": "Error code: VUTA(2)\nWhat to do: check whether feature name `do_nothing` is spelled correctly...",
+			"severity": "error",
+			"class": "MY_CLASS",
+			"feature": "make",
+			"line": 42,
+			"file": "D:/projects/myapp/src/my_class.e",
+			"suggestion": "check whether feature name `do_nothing` is spelled correctly in a call or ensure that the feature is available to the class."
+		}
+	],
+	"warnings": [],
+	"timestamp": "2024-11-16T12:34:56Z"
+}

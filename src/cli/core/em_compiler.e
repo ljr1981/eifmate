@@ -1,80 +1,116 @@
 note
-	description: "[
-		Interface to EiffelStudio compiler via ec.exe.
-		
-		Executes compilation commands and captures output.
-		Uses PROCESS library to run ec.exe as subprocess.
-	]"
-	date: "$Date$"
-	revision: "$Revision$"
+    description: "Eiffel compiler wrapper for executing ec.exe"
 
 class
-	EM_COMPILER
+    EM_COMPILER
+
+--inherit
+--    RANDOMIZER  -- For any utility features you might need
 
 create
-	make
+    make
 
 feature {NONE} -- Initialization
 
-	make
-			-- Initialize compiler interface
-		do
-			create last_output.make_empty
-			create last_errors.make (0)
-		ensure
-			output_empty: last_output.is_empty
-			errors_empty: last_errors.is_empty
-		end
+    make
+            -- Initialize compiler wrapper
+        do
+            create last_output.make_empty
+            create last_errors.make (0)
+            last_exit_code := -1
+            ec_executable_path := "ec.exe"
+        ensure
+            output_initialized: last_output /= Void
+            errors_initialized: last_errors /= Void
+        end
 
 feature -- Access
 
-	last_output: STRING
-			-- Output from last compilation
+    ec_executable_path: STRING_32
+            -- Path to ec.exe executable
 
-	last_errors: ARRAYED_LIST [STRING]
-			-- Errors from last compilation
+    last_output: STRING_32
+            -- Captured output from last execution
 
-feature -- Status report
+    last_errors: ARRAYED_LIST [STRING_32]
+            -- Parsed error messages
 
-	is_available: BOOLEAN
-			-- Is ec.exe available?
-		do
-			-- TODO: Check if ec.exe exists
-			Result := True
-		end
+    last_exit_code: INTEGER
+            -- Exit code from last execution
 
-feature -- Operations
+feature -- Execution
 
-	compile (a_project_path: STRING_32; a_target: STRING_32)
-			-- Compile project at `a_project_path' for `a_target'
-		require
-			project_path_attached: a_project_path /= Void
-			not_empty: not a_project_path.is_empty
-			target_attached: a_target /= Void
-			compiler_available: is_available
-		do
-			-- TODO: Execute ec.exe with PROCESS library
-			-- ec -config path -target name -batch -c_compile
-		end
+    execute_ec (a_args: ARRAY [STRING_32])
+            -- Execute ec.exe with given arguments
+            -- Captures all output (stdout + stderr merged)
+        require
+            args_attached: a_args /= Void
+        local
+            l_process: PROCESS
+            l_buffer: SPECIAL [NATURAL_8]
+            l_chunk: STRING_32
+        do
+            -- Reset state
+            create last_output.make_empty
+            last_errors.wipe_out
+            last_exit_code := -1
 
-	freeze (a_project_path: STRING_32; a_target: STRING_32)
-			-- Freeze compile project
-		require
-			project_path_attached: a_project_path /= Void
-			not_empty: not a_project_path.is_empty
-			target_attached: a_target /= Void
-			compiler_available: is_available
-		do
-			-- TODO: Execute ec.exe with freeze
-			-- ec -config path -target name -batch -freeze
-		end
+            -- Create process
+            l_process := (create {PROCESS_FACTORY}).process_launcher (
+                ec_executable_path,
+                a_args,
+                Void  -- Use current directory
+            )
 
-note
-	copyright: "Copyright (c) 2024, Larry Rix"
-	license: "MIT License"
-	source: "[
-		EifMate - Claude-to-EiffelStudio Bridge
-		https://github.com/ljr1981/eifmate
-	]"
+            -- Configure process
+            l_process.set_hidden (True)
+            l_process.redirect_output_to_stream
+            l_process.redirect_error_to_same_as_output
+
+            -- Launch and capture output
+            l_process.launch
+
+            if l_process.launched then
+                -- Read output in chunks
+                from
+                    create l_buffer.make_filled (0, 512)
+                until
+                    l_process.has_output_stream_closed or else
+                    l_process.has_output_stream_error
+                loop
+                    l_buffer := l_buffer.aliased_resized_area_with_default (0, l_buffer.capacity)
+                    l_process.read_output_to_special (l_buffer)
+
+                    -- Convert console encoding to UTF-32
+                    l_chunk := converter.console_encoding_to_utf32 (
+                        console_encoding,
+                        create {STRING_8}.make_from_c_substring ($l_buffer, 1, l_buffer.count)
+                    )
+                    l_chunk.prune_all ({CHARACTER_32} '%R')
+                    last_output.append (l_chunk)
+                end
+
+                l_process.wait_for_exit
+                last_exit_code := l_process.exit_code
+            else
+                last_errors.force ("Failed to launch " + ec_executable_path)
+            end
+        ensure
+            output_captured: last_output /= Void
+        end
+
+feature {NONE} -- Encoding
+
+    converter: LOCALIZED_PRINTER
+            -- Encoding converter
+        once
+            create Result
+        end
+
+    console_encoding: ENCODING
+            -- Current console encoding
+        once
+            Result := (create {SYSTEM_ENCODINGS}).console_encoding
+        end
 
 end

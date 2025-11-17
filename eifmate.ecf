@@ -15,9 +15,18 @@
 			<concurrency use="thread"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL.ecf"/>
+		<library name="curl_http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\curl_http_client.ecf"/>
+		<library name="decimal" location="$ISE_LIBRARY\contrib\library\math\decimal\decimal\decimal.ecf"/>
+		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo_all.ecf"/>
+		<library name="libcurl_http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\libcurl_http_client.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="simple_json" location="D:\prod\simple_json\simple_json.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="zlib" location="$ISE_LIBRARY\unstable\library\compression\zlib\zlib.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
@@ -33,7 +42,6 @@
 	<target name="eifmate_cli" extends="eifmate_tests">
 		<description>CLI EXECUTABLE: The main bridge tool</description>
 		<root class="EM_CLI_APP" feature="make"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 	</target>
 	<target name="eifmate_gui" extends="eifmate_tests">
 		<description>GUI monitor (Phase 6-7)</description>

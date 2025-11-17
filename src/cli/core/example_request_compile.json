@@ -1,0 +1,5 @@
+{
+	"type": "compile",
+	"ecf_path": "D:/projects/myapp/myapp.ecf",
+	"target": "myapp_cli"
+}

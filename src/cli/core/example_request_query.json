@@ -1,0 +1,7 @@
+{
+	"type": "query",
+	"query_type": "flatshort",
+	"ecf_path": "D:/projects/myapp/myapp.ecf",
+	"target": "myapp_cli",
+	"class_name": "MY_CLASS"
+}

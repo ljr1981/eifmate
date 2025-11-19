@@ -11,7 +11,7 @@ class
 	TEST_EM_VALIDITY_JSON
 
 inherit
-	TEST_SET_BASE
+	TEST_SET_BASE_WITH_CONSTANTS
 
 feature -- Test routines
 

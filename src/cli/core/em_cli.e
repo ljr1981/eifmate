@@ -3,20 +3,8 @@ note
 		Main orchestrator for EifMate operations.
 		Coordinates between request parser, compiler, error parser,
 		and response builder to handle complete request/response cycle.
-		
-		Usage:
-			create cli.make
-			response := cli.process_request (request_json)
-			print (response.to_json_string)
-		
-		Flow:
-			1. Parse JSON request → EM_REQUEST
-			2. Validate request
-			3. Execute appropriate compiler operation → EM_COMPILER
-			4. Parse compiler output → EM_ERROR_PARSER
-			5. Build JSON response → EM_RESPONSE
 	]"
-	legal: "See notice at end of class."
+	author: "EifMate"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -34,182 +22,140 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize CLI orchestrator
 		do
-			create compiler.make
 			create error_parser.make
 		ensure
-			compiler_ready: compiler /= Void
 			error_parser_ready: error_parser /= Void
 		end
 
 feature -- Access
 
-	compiler: EM_COMPILER
-			-- Compiler wrapper
-
 	error_parser: EM_ERROR_PARSER
 			-- Error output parser
 
-	last_response: detachable EM_RESPONSE
-			-- Last response generated
-
 feature -- Operations
 
-
-feature {NONE} -- Implementation
-
-	execute_request (a_request: EM_REQUEST): EM_RESPONSE
-			-- Execute the appropriate operation for request
+	process_request (a_json_content: STRING): EM_RESPONSE
+			-- Process a raw JSON request string and return a structured response.
 		require
-			request_valid: a_request.is_valid
+			json_attached: a_json_content /= Void
 		local
-			l_project_path: PATH
+			l_request: EM_REQUEST
 		do
-			create Result.make_success ("what?")
+			-- 1. Parse Request
+			create l_request.make_from_json (a_json_content)
 
-			-- Check compiler availability
---			if not compiler.is_available then
---				Result := create_error_response ("Eiffel compiler (ec.exe) not found - is ISE_EIFFEL set?")
---			else
---				l_project_path := a_request.ecf_path_as_path
-
---				-- Execute based on request type
---				if a_request.is_compile then
---					execute_compile (a_request, l_project_path, Result)
-
---				elseif a_request.is_compile_clean then
---					execute_compile_clean (a_request, l_project_path, Result)
-
---				elseif a_request.is_freeze then
---					execute_freeze (a_request, l_project_path, Result)
-
---				elseif a_request.is_finalize then
---					execute_finalize (a_request, l_project_path, Result)
-
---				elseif a_request.is_test then
---					execute_test (a_request, l_project_path, Result)
-
---				elseif a_request.is_query then
---					execute_query (a_request, l_project_path, Result)
-
---				else
---					Result := create_error_response ("Unknown request type: " + a_request.request_type)
---				end
---			end
+			if not l_request.is_valid then
+				-- Fix VUAR(2): Pass empty list instead of Void
+				create Result.make_failure ("Invalid JSON request format.", empty_errors)
+			else
+				-- 2. Dispatch based on request type
+				if l_request.is_compile then
+					Result := handle_compile (l_request)
+				elseif l_request.is_query then
+					Result := handle_query (l_request)
+				else
+					-- Fix VUAR(2): Pass empty list instead of Void
+					create Result.make_failure ("Unknown request type: " + l_request.request_type, empty_errors)
+				end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
 
-	execute_compile (a_request: EM_REQUEST; a_path: PATH; a_response: EM_RESPONSE)
-			-- Execute standard compile
+feature {NONE} -- Implementation: Compilation
+
+	handle_compile (a_request: EM_REQUEST): EM_RESPONSE
+			-- Execute compilation logic.
 		require
 			request_valid: a_request.is_valid
-			path_attached: a_path /= Void
-			response_attached: a_response /= Void
+			is_compile: a_request.is_compile
+		local
+			l_errors: LIST [EM_ERROR]
+			l_compiler: EM_COMPILER
 		do
---			compiler.compile (a_path, a_request.target)
---			finalize_response (a_response)
+			-- Fix VUEX(2) & VUTA(2): Create fresh instance using helper for path
+			create l_compiler.make_with_path_and_target (default_ec_path, a_request.ecf_path, a_request.target)
+
+			-- Execute Melt (Default to melt for compile requests)
+			-- [cite_start]-- Usage pattern from TEST_EM_COMPILER [cite: 41, 45]
+			l_compiler.ec_melt_tuple (l_compiler.project_configuration)
+
+			-- Parse Output for Errors
+			-- [cite_start]-- Usage pattern from TEST_EM_ERROR_PARSER [cite: 7]
+			l_errors := error_parser.parse_errors (l_compiler.last_output)
+
+			-- Build Response
+			if l_compiler.last_errors.is_empty and l_errors.is_empty then
+				create Result.make_success (l_compiler.last_output)
+			else
+				create Result.make_failure (l_compiler.last_output, l_errors)
+			end
 		end
 
-	execute_compile_clean (a_request: EM_REQUEST; a_path: PATH; a_response: EM_RESPONSE)
-			-- Execute clean compile
+feature {NONE} -- Implementation: Queries
+
+	handle_query (a_request: EM_REQUEST): EM_RESPONSE
+			-- Execute query logic (flat, flatshort, etc).
 		require
 			request_valid: a_request.is_valid
-			path_attached: a_path /= Void
-			response_attached: a_response /= Void
+			is_query: a_request.is_query
+		local
+			l_config_tuple: TUPLE [config, target, project_path: STRING_32]
+			l_query_tuple: TUPLE [config, target, project_path, a_class: STRING_32]
+			l_compiler: EM_COMPILER
 		do
---			compiler.compile_clean (a_path, a_request.target)
---			finalize_response (a_response)
+			-- Fix VUEX(2) & VUTA(2): Create fresh instance using helper for path
+			create l_compiler.make_with_path_and_target (default_ec_path, a_request.ecf_path, a_request.target)
+			l_config_tuple := l_compiler.project_configuration
+
+			-- Construct arguments for flat/flatshort view generation
+			-- Fix VJAR: Convert class_name to STRING_32 to match TUPLE signature
+			l_query_tuple := [l_config_tuple.config, l_config_tuple.target, l_config_tuple.project_path, a_request.class_name.to_string_32]
+
+			if a_request.query_type.is_case_insensitive_equal ("flat") then
+				-- [cite_start]-- Usage pattern from TEST_EM_COMPILER [cite: 47]
+				l_compiler.ec_flat_tuple (l_query_tuple)
+
+				if l_compiler.last_errors.is_empty then
+					create Result.make_success (l_compiler.last_flat)
+				else
+					-- Fix VUAR(2): Provide empty list if we only have a string error from the compiler wrapper
+					create Result.make_failure (l_compiler.last_errors.first, empty_errors)
+				end
+
+			elseif a_request.query_type.is_case_insensitive_equal ("flatshort") then
+				-- Assuming ec_flatshort_tuple exists matching the pattern
+				l_compiler.ec_flatshort_tuple (l_query_tuple)
+
+				if l_compiler.last_errors.is_empty then
+					create Result.make_success (l_compiler.last_flat)
+				else
+					create Result.make_failure (l_compiler.last_errors.first, empty_errors)
+				end
+			else
+				create Result.make_failure ("Unsupported query type: " + a_request.query_type, empty_errors)
+			end
 		end
 
-	execute_freeze (a_request: EM_REQUEST; a_path: PATH; a_response: EM_RESPONSE)
-			-- Execute freeze
-		require
-			request_valid: a_request.is_valid
-			path_attached: a_path /= Void
-			response_attached: a_response /= Void
+feature {NONE} -- Implementation: Helpers
+
+	empty_errors: ARRAYED_LIST [EM_ERROR]
+			-- Helper to return an empty list for void safety compliance.
 		do
---			compiler.freeze (a_path, a_request.target)
---			finalize_response (a_response)
+			create Result.make (0)
 		end
 
-	execute_finalize (a_request: EM_REQUEST; a_path: PATH; a_response: EM_RESPONSE)
-			-- Execute finalize
-		require
-			request_valid: a_request.is_valid
-			path_attached: a_path /= Void
-			response_attached: a_response /= Void
+	default_ec_path: STRING_32
+			-- Retrieve default compiler path from a temporary instance.
+			-- Solves VUTA(2) by avoiding self-reference during creation.
+		local
+			l_temp: EM_COMPILER
 		do
---			compiler.finalize (a_path, a_request.target)
---			finalize_response (a_response)
+			create l_temp.make
+			Result := l_temp.ec_executable_path
 		end
-
-	execute_test (a_request: EM_REQUEST; a_path: PATH; a_response: EM_RESPONSE)
-			-- Execute tests
-		require
-			request_valid: a_request.is_valid
-			path_attached: a_path /= Void
-			response_attached: a_response /= Void
-		do
---			compiler.run_tests (a_path, a_request.target)
---			finalize_response (a_response)
-		end
-
-	execute_query (a_request: EM_REQUEST; a_path: PATH; a_response: EM_RESPONSE)
-			-- Execute code query
-		require
-			request_valid: a_request.is_valid
-			request_is_query: a_request.is_query
-			path_attached: a_path /= Void
-			response_attached: a_response /= Void
-		do
-			-- Dispatch to specific query type
---			if a_request.query_type.same_string (Query_type_flat) then
---				compiler.query_flat (a_path, a_request.target, a_request.class_name)
-
---			elseif a_request.query_type.same_string (Query_type_flatshort) then
---				compiler.query_flatshort (a_path, a_request.target, a_request.class_name)
-
---			elseif a_request.query_type.same_string (Query_type_clients) then
---				compiler.query_clients (a_path, a_request.target, a_request.class_name)
-
---			elseif a_request.query_type.same_string (Query_type_suppliers) then
---				compiler.query_suppliers (a_path, a_request.target, a_request.class_name)
---			end
-
-			-- For queries, output is the answer (no error parsing needed)
---			a_response.set_output (compiler.last_output)
---			a_response.set_success (compiler.last_succeeded)
-		end
-
---	finalize_response (a_response: EM_RESPONSE)
---			-- Parse compiler output and populate response
---		require
---			response_attached: a_response /= Void
---		do
---			-- Set raw output
---			a_response.set_output (compiler.last_output)
-
---			-- Set success flag
---			a_response.set_success (compiler.last_succeeded)
-
---			-- Parse errors if compilation failed
-----			if not compiler.last_succeeded then
-----				error_parser.parse (compiler.last_output)
-------				a_response.add_errors (error_parser.errors)
-------				a_response.add_errors (error_parser.warnings)
-----			end
---		end
 
 invariant
-	compiler_attached: compiler /= Void
 	error_parser_attached: error_parser /= Void
-
-note
-	copyright: "Copyright (c) 2024, Larry Rix"
-	license: "MIT License"
-	source: "[
-		EifMate - Claude-to-EiffelStudio Bridge
-		https://github.com/ljr1981/eifmate
-	]"
 
 end

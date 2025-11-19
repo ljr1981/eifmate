@@ -11,7 +11,7 @@ class
 	TEST_EM_PROJECT
 
 inherit
-	TEST_SET_BASE
+	TEST_SET_BASE_WITH_CONSTANTS
 
 feature -- Test routines
 

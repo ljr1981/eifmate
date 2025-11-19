@@ -11,12 +11,7 @@ class
 	TEST_EM_CLI
 
 inherit
-	TEST_SET_BASE
-
-	TESTING_CONSTANTS
-		undefine
-			default_create
-		end
+	TEST_SET_BASE_WITH_CONSTANTS
 
 feature -- Test routines
 

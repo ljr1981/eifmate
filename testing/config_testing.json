@@ -1,0 +1,6 @@
+{
+  "ec_path": "C:\\Program Files\\Eiffel Software\\EiffelStudio 25.02 Standard\\studio\\spec\\win64\\bin",
+  "test_project_root": "D:\\prod\\eifmate",
+  "test_external_lib_root": "D:\\prod\\simple_json",
+  "test_external_target": "simple_json_tests"
+}

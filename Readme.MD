@@ -32,37 +32,39 @@ Built from Larry Rix's proven experience: **44-66x productivity gains** using AI
 ## 🏗️ Architecture
 
 ```
+
 Claude AI (MCP Client)
-     ↓ JSON Request
+↓ JSON Request
 ┌─────────────────────┐
-│   EM_CLI_APP        │  ← CLI Entry Point
-│   (eifmate_cli.exe) │
+│   EM\_CLI\_APP        │  ← CLI Entry Point
+│   (eifmate\_cli.exe) │
 └──────────┬──────────┘
-           ↓
+↓
 ┌────────────────────────────────────────────┐
 │  Core Processing Pipeline                  │
 ├────────────────────────────────────────────┤
-│  EM_REQUEST      Parse JSON requests       │
-│  EM_CLI          Orchestrate operations    │
-│  EM_COMPILER     Execute ec.exe commands   │
-│  EM_PROJECT      ECF configuration         │
+│  EM\_REQUEST      Parse JSON requests       │
+│  EM\_CLI          Orchestrate operations    │
+│  EM\_COMPILER     Execute ec.exe commands   │
+│  EM\_PROJECT      ECF configuration         │
 └────────────┬───────────────────────────────┘
-             ↓
+↓
 ┌────────────────────────────────────────────┐
 │  Error Intelligence                        │
 ├────────────────────────────────────────────┤
-│  EM_ERROR_PARSER       Parse compiler msgs │
-│  EM_VALIDITY_CATALOG   ECMA-367 lookup     │
-│  EM_ERROR              Structured errors   │
-│  EM_ERROR_LOCATION     File/line context   │
+│  EM\_ERROR\_PARSER       Parse compiler msgs │
+│  EM\_VALIDITY\_CATALOG   ECMA-367 lookup     │
+│  EM\_ERROR              Structured errors   │
+│  EM\_ERROR\_LOCATION     File/line context   │
 └────────────┬───────────────────────────────┘
-             ↓
+↓
 ┌────────────────────────────────────────────┐
-│  EM_RESPONSE     Build JSON output         │
+│  EM\_RESPONSE     Build JSON output         │
 └────────────────────────────────────────────┘
-             ↓
-     JSON Response to Claude
-```
+↓
+JSON Response to Claude
+
+````
 
 ---
 
@@ -76,8 +78,8 @@ Claude AI (MCP Client)
 ### ✅ Completed (Phase 0)
 
 #### Core Infrastructure
-- [x] Project structure with proper ECF configuration
-- [x] Multiple targets: library, CLI, tests, future GUI/daemon/server
+- [x] [cite_start]Project structure with proper ECF configuration [cite: 12]
+- [x] [cite_start]Multiple targets: library, CLI, tests, future GUI/daemon/server [cite: 12]
 - [x] Thread concurrency support for PROCESS library
 - [x] SIMPLE_JSON integration for request/response handling
 - [x] Comprehensive .gitignore for Eiffel projects
@@ -86,21 +88,22 @@ Claude AI (MCP Client)
 - [x] `EM_CLI_APP` - CLI entry point with argument handling
 - [x] `EM_CLI` - Request orchestration and processing
 - [x] `EM_REQUEST` - JSON request parsing
-- [x] `EM_RESPONSE` - JSON response building
-- [x] `EM_COMPILER` - EiffelStudio compiler wrapper
+- [x] [cite_start]`EM_RESPONSE` - JSON response building with robust contracts and timestamps [cite: 1, 9]
+- [x] [cite_start]`EM_COMPILER` - EiffelStudio compiler wrapper with stateless tuple support [cite: 65]
 - [x] `EM_PROJECT` - ECF project representation
 - [x] `EM_CONSTANTS` - Project-wide named constants
 
 #### Error Intelligence System
 - [x] `EM_ERROR` - Structured error representation
 - [x] `EM_ERROR_LOCATION` - File/line/column tracking
-- [x] `EM_ERROR_PARSER` - Compiler output parsing
+- [x] [cite_start]`EM_ERROR_PARSER` - State machine parsing for multi-line compiler output [cite: 14]
 - [x] `EM_VALIDITY_CODE` - ECMA-367 error code model
 - [x] `EM_VALIDITY_CATEGORY` - Error categorization
 - [x] `EM_VALIDITY_CATALOG` - Error code catalog with explanations
 
 #### Testing Infrastructure
 - [x] `TEST_SET_BASE` - Base test class with shared assertions
+- [x] [cite_start]`TEST_EM_COMPILER` - Coverage for melt, quick_melt, flat view, and configuration [cite: 22]
 - [x] AutoTest framework integration
 - [x] Example test demonstrating patterns
 
@@ -111,10 +114,8 @@ Claude AI (MCP Client)
 
 ### 🚧 In Progress
 
-- [ ] Full implementation of `EM_COMPILER.compile` with PROCESS library
-- [ ] Complete error parsing with state machine approach
 - [ ] ECMA-367 validity codes JSON catalog population
-- [ ] JSON response generation from compiler results
+- [ ] JSON response generation integration test
 - [ ] End-to-end POC validation
 
 ### 📋 Planned (Phase 1+)
@@ -144,28 +145,33 @@ Claude AI (MCP Client)
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/ljr1981/eifmate.git
+git clone [https://github.com/ljr1981/eifmate.git](https://github.com/ljr1981/eifmate.git)
 cd eifmate
-```
+````
 
-2. **Open in EiffelStudio:**
+2.  **Open in EiffelStudio:**
+
+<!-- end list -->
+
 ```bash
 # Option 1: Double-click eifmate.ecf in Windows Explorer
 # Option 2: Use EiffelStudio command line
 estudio eifmate.ecf
 ```
 
-3. **Select target and compile:**
-   - **For development:** Select target `eifmate_tests`
-   - **For CLI executable:** Select target `eifmate_cli`
-   - **Compile:** Press F7 or click the Compile button
+3.  **Select target and compile:**
 
-4. **Run tests:**
-   - Ensure target `eifmate_tests` is selected
-   - Navigate to: **Testing > AutoTest**
-   - Click: **Execute All Tests**
+      - **For development:** Select target `eifmate_tests`
+      - **For CLI executable:** Select target `eifmate_cli`
+      - **Compile:** Press F7 or click the Compile button
 
----
+4.  **Run tests:**
+
+      - Ensure target `eifmate_tests` is selected
+      - Navigate to: **Testing \> AutoTest**
+      - Click: **Execute All Tests**
+
+-----
 
 ## 📂 Project Structure
 
@@ -207,10 +213,11 @@ eifmate/
     ├── application.e              # Test application root
     ├── test_set_base.e            # Base test class
     └── cli/
+        ├── test_em_compiler.e     # Compiler wrapper tests
         └── test_em_in_system.e    # System integration test
 ```
 
----
+-----
 
 ## 🔧 Usage
 
@@ -219,6 +226,7 @@ eifmate/
 EifMate communicates via structured JSON for maximum clarity and type safety.
 
 #### Compile Request
+
 ```json
 {
   "type": "compile",
@@ -228,6 +236,7 @@ EifMate communicates via structured JSON for maximum clarity and type safety.
 ```
 
 #### Query Request
+
 ```json
 {
   "type": "query",
@@ -239,6 +248,7 @@ EifMate communicates via structured JSON for maximum clarity and type safety.
 ```
 
 #### Response Format
+
 ```json
 {
   "success": false,
@@ -279,7 +289,7 @@ eifmate_cli.exe query flatshort D:/projects/myapp/myapp.ecf myapp_cli MY_CLASS
 eifmate_cli.exe --help
 ```
 
----
+-----
 
 ## 🎯 Design Patterns & Best Practices
 
@@ -302,13 +312,14 @@ make_from_json (a_json: STRING)
 ### Feature Organization
 
 Classes follow standard Eiffel categories:
-- `{NONE} -- Initialization` - Private creation procedures
-- `Access` - Query features returning values
-- `Status report` - Boolean state queries
-- `Element change` - Modification commands
-- `Conversion` - Type conversions
-- `{NONE} -- Implementation` - Private helpers
-- `{NONE} -- Constants` - Named constants
+
+  - `{NONE} -- Initialization` - Private creation procedures
+  - `Access` - Query features returning values
+  - `Status report` - Boolean state queries
+  - `Element change` - Modification commands
+  - `Conversion` - Type conversions
+  - `{NONE} -- Implementation` - Private helpers
+  - `{NONE} -- Constants` - Named constants
 
 ### Named Constants Pattern
 
@@ -348,7 +359,7 @@ class EM_VALIDITY_CODE
 end
 ```
 
----
+-----
 
 ## 🧪 Testing
 
@@ -379,9 +390,9 @@ end
 
 ### Running Tests
 
-1. Open `eifmate.ecf` with target `eifmate_tests`
-2. Navigate to: **Testing > AutoTest**
-3. Click: **Execute All Tests**
+1.  Open `eifmate.ecf` with target `eifmate_tests`
+2.  Navigate to: **Testing \> AutoTest**
+3.  Click: **Execute All Tests**
 
 ### Test Organization
 
@@ -393,7 +404,7 @@ testing/
     └── test_em_in_system.e    # Brings all EM_* into system
 ```
 
----
+-----
 
 ## 🛠️ Dependencies
 
@@ -403,7 +414,7 @@ testing/
 |---------|---------|--------|
 | **base** | Core Eiffel (EiffelBase) | EiffelStudio |
 | **process** | Subprocess execution | EiffelStudio |
-| **simple_json** | JSON parsing/generation | [GitHub](https://github.com/ljr1981/simple_json) |
+| **simple\_json** | JSON parsing/generation | [GitHub](https://github.com/ljr1981/simple_json) |
 | **time** | Timestamp operations | EiffelStudio |
 | **encoding** | Text encoding | EiffelStudio |
 
@@ -416,7 +427,7 @@ testing/
 | **zlib** | Compression | 🔮 Future |
 | **uuid** | Unique identifiers | 🔮 Future |
 
----
+-----
 
 ## 📋 ECF Targets
 
@@ -428,184 +439,208 @@ testing/
 | `eifmate_gui` | GUI monitor | 🔮 Phase 6-7 | Future |
 | `eifmate_daemon` | Watch service | 🔮 Phase 3 | Future |
 | `eifmate_server` | HTTP server | 🔮 Phase 2B | Future |
+| `eifmate_broken` | Negative Testing | ✅ Compiling | Yes |
 
----
+-----
 
 ## 🗺️ Roadmap
 
 ### Phase 0: Proof of Concept (Current)
+
 **Goal:** Validate end-to-end compilation cycle  
 **Timeline:** 8-12 hours of focused work  
-**Status:** 🟡 In Progress (70% complete)
+**Status:** 🟡 In Progress (85% complete)
 
 **Remaining Work:**
-- [ ] Complete `EM_COMPILER.compile` implementation
-- [ ] Populate ECMA-367 validity codes catalog
-- [ ] End-to-end test with real Eiffel project
-- [ ] Validate JSON response generation
+
+  - [ ] Populate ECMA-367 validity codes catalog
+  - [ ] End-to-end test with real Eiffel project
+  - [ ] Validate JSON response generation
 
 ### Phase 1: Minimal CLI Bridge (Next)
+
 **Goal:** Ship working CLI tool for manual use  
 **Timeline:** 4-8 hours  
 **Deliverable:** `eifmate_cli.exe` you can run today
 
 **Features:**
-- Single compile request/response
-- Basic error parsing with ECMA help
-- JSON and command-line interfaces
-- Manual iteration workflow
+
+  - Single compile request/response
+  - Basic error parsing with ECMA help
+  - JSON and command-line interfaces
+  - Manual iteration workflow
 
 ### Phase 2: Testing Integration
+
 **Goal:** Add AutoTest support  
 **Timeline:** 3-6 hours  
 **Deliverable:** Compile + test in one request
 
 **Features:**
-- Execute AutoTest suites
-- Parse test results
-- Test filtering
-- Combined compile+test workflow
+
+  - Execute AutoTest suites
+  - Parse test results
+  - Test filtering
+  - Combined compile+test workflow
 
 ### Phase 3: Snapshots & Retry
+
 **Goal:** Safe iterative development  
 **Timeline:** 4-8 hours  
 **Deliverable:** Automatic rollback on failure
 
 **Features:**
-- File snapshot/restore
-- Retry logic with max attempts
-- Automatic rollback on failure
-- State management
+
+  - File snapshot/restore
+  - Retry logic with max attempts
+  - Automatic rollback on failure
+  - State management
 
 ### Phase 4-5: Dogfooding (2-3 weeks)
+
 **Goal:** Build real libraries with EifMate  
 **Projects:**
-- SIMPLE_SQL library
-- EIFFEL_KNOWLEDGE library  
-- EIFFEL_SYNTAX library
+
+  - SIMPLE\_SQL library
+  - EIFFEL\_KNOWLEDGE library
+  - EIFFEL\_SYNTAX library
 
 **Purpose:** Discover pain points through real usage
 
 ### Phase 6-7: Optional GUI (Maybe)
+
 **Goal:** Visual monitoring if CLI inadequate  
 **Timeline:** 12-20 hours  
 **Decision:** Based on Phase 5 dogfooding feedback
 
----
+-----
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please:
+Contributions are welcome\! Please:
 
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Follow** Eiffel coding conventions (see below)
-4. **Add** tests for new functionality
-5. **Ensure** all tests pass
-6. **Commit** with clear messages (`git commit -m 'Add amazing feature'`)
-7. **Push** to your branch (`git push origin feature/amazing-feature`)
-8. **Open** a Pull Request
+1.  **Fork** the repository
+2.  **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3.  **Follow** Eiffel coding conventions (see below)
+4.  **Add** tests for new functionality
+5.  **Ensure** all tests pass
+6.  **Commit** with clear messages (`git commit -m 'Add amazing feature'`)
+7.  **Push** to your branch (`git push origin feature/amazing-feature`)
+8.  **Open** a Pull Request
 
 ### Eiffel Coding Conventions
 
 **Naming:**
-- Locals: `l_` prefix (e.g., `l_result`, `l_count`)
-- Attached locals: `al_` prefix (e.g., `al_value`)
-- Loop cursors: `ic` or `ic_` prefix
-- Constants: `Capitalized_with_underscores`
+
+  - Locals: `l_` prefix (e.g., `l_result`, `l_count`)
+  - Attached locals: `al_` prefix (e.g., `al_value`)
+  - Loop cursors: `ic` or `ic_` prefix
+  - Constants: `Capitalized_with_underscores`
 
 **Structure:**
-- Note clauses at beginning and end
-- Standard feature categories (see Design Patterns)
-- All assertions named
-- Design by Contract enforced
+
+  - Note clauses at beginning and end
+  - Standard feature categories (see Design Patterns)
+  - All assertions named
+  - Design by Contract enforced
 
 **Quality:**
-- 100% test coverage goal
-- Clean compile (no warnings)
-- Comprehensive documentation
 
----
+  - 100% test coverage goal
+  - Clean compile (no warnings)
+  - Comprehensive documentation
+
+-----
 
 ## 📝 Known Limitations
 
 ### Platform Support
-- **Windows:** Full support ✅
-- **Linux/Mac:** Planned for Phase 2 🔮
+
+  - **Windows:** Full support ✅
+  - **Linux/Mac:** Planned for Phase 2 🔮
 
 ### EiffelStudio Integration
-- **Command-line only:** No GUI integration yet
-- **Single instance:** No concurrent compilations
-- **File locking:** Be aware of EiffelStudio GUI file locks
+
+  - **Command-line only:** No GUI integration yet
+  - **Single instance:** No concurrent compilations
+  - **File locking:** Be aware of EiffelStudio GUI file locks
 
 ### Error Parsing
-- **Best effort:** Complex error formats may not parse perfectly
-- **ECMA-367:** Catalog still being populated
-- **Warnings:** Currently treated same as errors
 
----
+  - **Best effort:** Complex error formats may not parse perfectly
+  - **ECMA-367:** Catalog still being populated
+  - **Warnings:** Currently treated same as errors
+
+-----
 
 ## 🐛 Known Issues
 
-1. **File Locking:** EiffelStudio GUI can lock project files
-   - **Workaround:** Close project in GUI before using CLI
-   - **Status:** Design limitation, not a bug
+1.  **File Locking:** EiffelStudio GUI can lock project files
 
-2. **Thread vs SCOOP:** ECF must specify `<concurrency use="thread"/>`
-   - **Reason:** PROCESS library requires thread concurrency
-   - **Status:** Fixed in current ECF
+      - **Workaround:** Close project in GUI before using CLI
+      - **Status:** Design limitation, not a bug
 
-3. **Windows Paths:** Backslashes in paths need proper escaping
-   - **Workaround:** Use forward slashes or double backslashes
-   - **Status:** Platform-specific, working as designed
+2.  **Thread vs SCOOP:** ECF must specify `<concurrency use="thread"/>`
 
----
+      - **Reason:** PROCESS library requires thread concurrency
+      - **Status:** Fixed in current ECF
+
+3.  **Windows Paths:** Backslashes in paths need proper escaping
+
+      - **Workaround:** Use forward slashes or double backslashes
+      - **Status:** Platform-specific, working as designed
+
+-----
 
 ## 📚 Documentation
 
 ### Core Documentation
-- [README.md](README.md) - This file (overview)
-- [CRITICAL_PRINCIPLES.md](/mnt/project/CRITICAL_PRINCIPLES.md) - Design principles
-- [EIFFEL_PRODUCTION_GUIDE.md](/mnt/project/EIFFEL_PRODUCTION_GUIDE.md) - Coding patterns
-- [SIMPLE_JSON_REFERENCE.md](/mnt/project/SIMPLE_JSON_REFERENCE.md) - JSON library usage
-- [Project_Plan_v6.md](/mnt/project/Project_Plan_v6.md) - Detailed project plan
+
+  - [README.md](README.md) - This file (overview)
+  - [CRITICAL\_PRINCIPLES.md](https://www.google.com/search?q=/mnt/project/CRITICAL_PRINCIPLES.md) - Design principles
+  - [EIFFEL\_PRODUCTION\_GUIDE.md](https://www.google.com/search?q=/mnt/project/EIFFEL_PRODUCTION_GUIDE.md) - Coding patterns
+  - [SIMPLE\_JSON\_REFERENCE.md](https://www.google.com/search?q=/mnt/project/SIMPLE_JSON_REFERENCE.md) - JSON library usage
+  - [Project\_Plan\_v6.md](https://www.google.com/search?q=/mnt/project/Project_Plan_v6.md) - Detailed project plan
 
 ### Examples
-- [example_request_compile.json](examples/example_request_compile.json)
-- [example_request_query.json](examples/example_request_query.json)
-- [example_response.json](examples/example_response.json)
 
----
+  - [example\_request\_compile.json](https://www.google.com/search?q=examples/example_request_compile.json)
+  - [example\_request\_query.json](https://www.google.com/search?q=examples/example_request_query.json)
+  - [example\_response.json](https://www.google.com/search?q=examples/example_response.json)
+
+-----
 
 ## 🔗 Related Projects
 
-- **[SIMPLE_JSON](https://github.com/ljr1981/simple_json)** - High-level JSON library for Eiffel
-- **[EiffelStudio](https://www.eiffel.com/eiffelstudio/)** - The Eiffel IDE and compiler
-- **[Model Context Protocol](https://modelcontextprotocol.io/)** - AI-to-tool communication protocol
-- **[ECMA-367](https://www.ecma-international.org/publications-and-standards/standards/ecma-367/)** - Eiffel language standard
+  - **[SIMPLE\_JSON](https://github.com/ljr1981/simple_json)** - High-level JSON library for Eiffel
+  - **[EiffelStudio](https://www.eiffel.com/eiffelstudio/)** - The Eiffel IDE and compiler
+  - **[Model Context Protocol](https://modelcontextprotocol.io/)** - AI-to-tool communication protocol
+  - **[ECMA-367](https://www.ecma-international.org/publications-and-standards/standards/ecma-367/)** - Eiffel language standard
 
----
+-----
 
 ## 📊 Success Metrics
 
-### From SIMPLE_JSON Experience (Validated)
-- **Core Library (1000+ LOC):** 1 hour (vs 40-80 traditional)
-- **JSON Schema (complex):** 2 hours (vs 80-120 traditional)  
-- **Full Testing (100% coverage):** 1 hour (vs 40-60 traditional)
-- **Documentation:** 30 minutes (vs 20-30 hours traditional)
+### From SIMPLE\_JSON Experience (Validated)
+
+  - **Core Library (1000+ LOC):** 1 hour (vs 40-80 traditional)
+  - **JSON Schema (complex):** 2 hours (vs 80-120 traditional)
+  - **Full Testing (100% coverage):** 1 hour (vs 40-60 traditional)
+  - **Documentation:** 30 minutes (vs 20-30 hours traditional)
 
 **Productivity Gain:** **44-66x faster** for well-specified work
 
 ### EifMate Goals
-- **Phase 0:** 8-12 hours (vs 40-80 traditional)
-- **Phase 1:** 4-8 hours (vs 80-120 traditional)
-- **Phase 2:** 3-6 hours (vs 40-60 traditional)
-- **Phase 3:** 4-8 hours (vs 60-80 traditional)
+
+  - **Phase 0:** 8-12 hours (vs 40-80 traditional)
+  - **Phase 1:** 4-8 hours (vs 80-120 traditional)
+  - **Phase 2:** 3-6 hours (vs 40-60 traditional)
+  - **Phase 3:** 4-8 hours (vs 60-80 traditional)
 
 **Total Development:** 19-34 hours (vs 220+ traditional)  
 **Calendar Time:** 7-8 weeks (includes dogfooding usage time)
 
----
+-----
 
 ## 📜 License
 
@@ -631,7 +666,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
----
+-----
 
 ## 📧 Contact & Support
 
@@ -641,23 +676,23 @@ SOFTWARE.
 
 **Found a bug?** [Open an issue](https://github.com/ljr1981/eifmate/issues)  
 **Have a feature request?** [Start a discussion](https://github.com/ljr1981/eifmate/discussions)  
-**Want to contribute?** See [Contributing](#-contributing) above
+**Want to contribute?** See [Contributing](https://www.google.com/search?q=%23-contributing) above
 
----
+-----
 
 ## 🙏 Acknowledgments
 
-- **Claude Sonnet 4.5** - AI pair programming partner
-- **EiffelStudio Team** - For the excellent compiler and tools
-- **Eiffel Community** - For maintaining high standards
-- **Anthropic** - For Claude and MCP protocol
+  - **Claude Sonnet 4.5** - AI pair programming partner
+  - **EiffelStudio Team** - For the excellent compiler and tools
+  - **Eiffel Community** - For maintaining high standards
+  - **Anthropic** - For Claude and MCP protocol
 
----
+-----
 
 **Status:** 🚧 Active Development - Phase 0 POC  
 **Version:** 0.1.0 (Initial Structure)  
 **Last Updated:** November 19, 2025
 
----
+-----
 
 *Built with ❤️ using AI-assisted development. Dogfooding from Day 1.*

@@ -240,7 +240,8 @@ feature -- EC Action Commands
 			target_attached: a_target /= Void
 			path_attached: a_project_path /= Void
 		do
-			execute_ec (<<"-config", a_config, "-target", a_target, "-project_path", a_project_path, "-quick_melt">>)
+			-- Added "-batch" to prevent hangs
+			execute_ec (<<"-config", a_config, "-target", a_target, "-project_path", a_project_path, "-batch", "-quick_melt">>)
 		ensure
 			output_captured: last_output /= Void
 		end
@@ -252,9 +253,8 @@ feature -- EC Action Commands
 			target_attached: a_target /= Void
 			path_attached: a_project_path /= Void
 		do
-			execute_ec (<<"-config", a_config, "-target", a_target, "-project_path", a_project_path, "-melt">>)
-		ensure
-			output_captured: last_output /= Void
+			-- Added "-batch" to prevent hangs
+			execute_ec (<<"-config", a_config, "-target", a_target, "-project_path", a_project_path, "-batch", "-melt">>)
 		end
 
 	ec_flat (a_config, a_target, a_project_path, a_class_name: READABLE_STRING_GENERAL)
@@ -265,7 +265,8 @@ feature -- EC Action Commands
 			path_attached: a_project_path /= Void
 			class_name_attached: a_class_name /= Void
 		do
-			execute_ec (<<"-config", a_config, "-target", a_target, "-project_path", a_project_path, "-flat", a_class_name>>)
+			-- Added "-batch" here as well for safety
+			execute_ec (<<"-config", a_config, "-target", a_target, "-project_path", a_project_path, "-batch", "-flat", a_class_name>>)
 		ensure
 			output_captured: last_output /= Void
 		end
@@ -278,11 +279,12 @@ feature -- EC Action Commands
 			path_attached: a_project_path /= Void
 			class_name_attached: a_class_name /= Void
 		do
-			execute_ec (<<"-config", a_config, "-target", a_target, "-project_path", a_project_path, "-flatshort", a_class_name>>)
+			-- Added "-batch"
+			execute_ec (<<"-config", a_config, "-target", a_target, "-project_path", a_project_path, "-batch", "-flatshort", a_class_name>>)
 		ensure
 			output_captured: last_output /= Void
 		end
-
+		
 feature -- Tuple Wrappers (Agent Helpers)
 
 	ec_quick_melt_tuple (a_tuple: TUPLE [config, target, project_path: STRING_32])

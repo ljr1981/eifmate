@@ -54,4 +54,10 @@
 		<description>HTTP server mode</description>
 		<root class="EIFMATE_CLI_APP" feature="make"/>
 	</target>
+	<target name="eifmate_broken">
+		<description>A target containing code that creates compile fails on purpose.</description>
+		<root all_classes="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="src_fails" location="D:\prod\eifmate\src_fails\" recursive="true"/>
+	</target>
 </system>

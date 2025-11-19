@@ -24,6 +24,11 @@ class
 inherit
 	TEST_SET_BASE
 
+	TESTING_CONSTANTS
+		undefine
+			default_create
+		end
+
 feature -- Test routines: Connectivity & Basic Output
 
 	test_ec_help
@@ -272,9 +277,6 @@ feature -- Test routines: Configuration State
 		end
 
 feature {NONE} -- Constants
-
-	ec_path: STRING_32 = "C:\Program Files\Eiffel Software\EiffelStudio 25.02 Standard\studio\spec\win64\bin"
-		-- Hardcoded path to the compiler executable for this test environment.
 
 	ec_environment: STRING_32 = "[
 $ISE_EIFFEL = C:\Program Files\Eiffel Software\EiffelStudio 25.02 Standard

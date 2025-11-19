@@ -209,29 +209,29 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 
-			Result.put_string (a_error.code, Json_key_error_code).do_nothing
-			Result.put_string (a_error.message, Json_key_message).do_nothing
-			Result.put_string (a_error.severity_string, Json_key_severity).do_nothing
+--			Result.put_string (a_error.code, Json_key_error_code).do_nothing
+--			Result.put_string (a_error.message, Json_key_message).do_nothing
+--			Result.put_string (a_error.severity_string, Json_key_severity).do_nothing
 
-			if not a_error.class_name.is_empty then
-				Result.put_string (a_error.class_name, Json_key_class_name).do_nothing
-			end
+--			if not a_error.class_name.is_empty then
+--				Result.put_string (a_error.class_name, Json_key_class_name).do_nothing
+--			end
 
-			if not a_error.feature_name.is_empty then
-				Result.put_string (a_error.feature_name, Json_key_feature_name).do_nothing
-			end
+--			if not a_error.feature_name.is_empty then
+--				Result.put_string (a_error.feature_name, Json_key_feature_name).do_nothing
+--			end
 
-			if a_error.line_number > 0 then
-				Result.put_integer (a_error.line_number, Json_key_line_number).do_nothing
-			end
+--			if a_error.line_number > 0 then
+--				Result.put_integer (a_error.line_number, Json_key_line_number).do_nothing
+--			end
 
-			if not a_error.file_path.is_empty then
-				Result.put_string (a_error.file_path, Json_key_file_path).do_nothing
-			end
+--			if not a_error.file_path.is_empty then
+--				Result.put_string (a_error.file_path, Json_key_file_path).do_nothing
+--			end
 
-			if not a_error.suggestion.is_empty then
-				Result.put_string (a_error.suggestion, Json_key_suggestion).do_nothing
-			end
+--			if not a_error.suggestion.is_empty then
+--				Result.put_string (a_error.suggestion, Json_key_suggestion).do_nothing
+--			end
 		ensure
 			result_attached: Result /= Void
 		end

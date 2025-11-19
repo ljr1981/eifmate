@@ -1,0 +1,104 @@
+{
+  "validity_codes": [
+    {
+      "code": "VEEN",
+      "category": "Entities",
+      "description": "Entity name must be properly declared. Check spelling, imports, and scope.",
+      "common_causes": [
+        "Typo in feature or variable name",
+        "Missing inheritance or import",
+        "Incorrect scope or visibility"
+      ]
+    },
+    {
+      "code": "VUTA",
+      "category": "Usage",
+      "description": "Target must be attached (not void). Use 'if attached' pattern or ensure initialization.",
+      "common_causes": [
+        "Calling feature on potentially void reference",
+        "Missing initialization",
+        "Incorrect use of detachable types"
+      ]
+    },
+    {
+      "code": "VTCT",
+      "category": "Types",
+      "description": "Type must be a valid class name. Check that class exists and is properly imported.",
+      "common_causes": [
+        "Class name misspelled",
+        "Class not in project",
+        "Missing library dependency"
+      ]
+    },
+    {
+      "code": "VMFN",
+      "category": "Members",
+      "description": "Feature name must be unique within class. Check for conflicting feature names.",
+      "common_causes": [
+        "Duplicate feature declaration",
+        "Inherited feature with same name",
+        "Name conflict with keyword"
+      ]
+    },
+    {
+      "code": "VJAR",
+      "category": "Types",
+      "description": "Type must conform to expected type. Check inheritance hierarchy and conversions.",
+      "common_causes": [
+        "Incompatible type assignment",
+        "Missing type conversion",
+        "Incorrect generic parameter"
+      ]
+    },
+    {
+      "code": "VHPR",
+      "category": "Contracts",
+      "description": "Precondition must be equal or weaker than parent. Use 'require else' for additional alternatives.",
+      "common_causes": [
+        "Strengthening parent precondition",
+        "Using 'require' instead of 'require else'",
+        "Breaking Liskov Substitution Principle"
+      ]
+    },
+    {
+      "code": "VAPE",
+      "category": "Contracts",
+      "description": "Precondition violation. Ensure all required conditions are met before calling feature.",
+      "common_causes": [
+        "Calling feature without satisfying preconditions",
+        "Logic error in calling code",
+        "Incorrect assumption about state"
+      ]
+    },
+    {
+      "code": "VPIR",
+      "category": "Redefinition",
+      "description": "Feature redefinition must maintain signature compatibility. Check parameter and return types.",
+      "common_causes": [
+        "Changing feature signature in redefinition",
+        "Incompatible parameter types",
+        "Incompatible return type"
+      ]
+    },
+    {
+      "code": "VHAY",
+      "category": "Contracts",
+      "description": "Postcondition must be equal or stronger than parent. Use 'ensure then' to add guarantees.",
+      "common_causes": [
+        "Weakening parent postcondition",
+        "Using 'ensure' instead of 'ensure then'",
+        "Breaking contract strengthening rule"
+      ]
+    },
+    {
+      "code": "VWOE",
+      "category": "Usage",
+      "description": "Once feature cannot be called on separate target. Check SCOOP usage.",
+      "common_causes": [
+        "Calling once feature in concurrent context",
+        "Incorrect processor usage",
+        "SCOOP constraint violation"
+      ]
+    }
+  ]
+}

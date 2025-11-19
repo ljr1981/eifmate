@@ -122,13 +122,13 @@ feature -- Random Numbers
 				from
 					v := a_capacity * 100
 					l_number := random_integer \\ (a_range.upper - a_range.lower) + 1 + a_range.lower
-				variant
-					v
 				until
 					not Result.has (l_number) or Result.is_empty
 				loop
 					v := v - 1
 					l_number := random_integer \\ (a_range.upper - a_range.lower) + 1 + a_range.lower
+				variant
+					v
 				end
 				Result.force (l_number)
 			end

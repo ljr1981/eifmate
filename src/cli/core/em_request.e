@@ -139,18 +139,77 @@ feature -- Access
 
 	request_type: STRING_8
 			-- Type of request (compile, test, query, etc.)
+		attribute
+			create Result.make_empty
+		end
 
 	ecf_path: STRING_8
 			-- Path to ECF configuration file
+		attribute
+			create Result.make_empty
+		end
 
 	target: STRING_8
 			-- Target name within ECF
+		attribute
+			create Result.make_empty
+		end
 
 	class_name: STRING_8
 			-- Class name (for query requests)
+		attribute
+			create Result.make_empty
+		end
 
 	query_type: STRING_8
 			-- Query type (flat, flatshort, etc.)
+		attribute
+			create Result.make_empty
+		end
+
+feature -- Settings
+
+	set_request_type (a_request_type: like request_type)
+			-- set `request_type' to `a_request_type'
+		require
+			valid_request_type: (<<"compile", "test", "query">>).has (a_request_type)
+		do
+			request_type := a_request_type
+		end
+
+	set_ecf_path (a_ecf_path: like ecf_path)
+			-- set `ecf_path' to `a_ecf_path'
+		require
+			not_empty: not a_ecf_path.is_empty
+		do
+			ecf_path := a_ecf_path
+		end
+
+	set_target (a_target: like target)
+			-- set `target' to `a_target'
+		require
+			not_empty: not a_target.is_empty
+		do
+			target := a_target
+		end
+
+	set_class_name (a_class_name: like class_name)
+			-- set `class_name' to `a_class_name'
+		require
+			not_empty: not a_class_name.is_empty
+		do
+			class_name := a_class_name
+		end
+
+
+	set_query_type (a_query_type: like query_type)
+			-- set `query_type' to `a_query_type'
+		require
+			valid_query_type: (<<"flat", "flatshort">>).has (a_query_type)
+		do
+			query_type := a_query_type
+		end
+
 
 feature -- Status report
 
@@ -191,28 +250,6 @@ feature -- Status report
 			-- Is this a query request?
 		do
 			Result := request_type.same_string (Request_type_query)
-		end
-
-feature -- Element change
-
-	set_class_name (a_name: STRING_8)
-			-- Set class name for query
-		require
-			name_attached: a_name /= Void
-		do
-			class_name := a_name.twin
-		ensure
-			class_name_set: class_name.same_string (a_name)
-		end
-
-	set_query_type (a_type: STRING_8)
-			-- Set query type
-		require
-			type_attached: a_type /= Void
-		do
-			query_type := a_type.twin
-		ensure
-			query_type_set: query_type.same_string (a_type)
 		end
 
 feature -- Conversion

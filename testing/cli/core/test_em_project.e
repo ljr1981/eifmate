@@ -8,17 +8,23 @@ note
 	testing: "type/manual"
 
 class
-	TEST_TEST_SET
+	TEST_EM_PROJECT
 
 inherit
 	TEST_SET_BASE
 
 feature -- Test routines
 
-	test_test
+	test_project_data
 			-- New test routine
+		note
+			testing:  "covers/{EM_PROJECT}"
+		local
+			l_project: EM_PROJECT
 		do
-			assert_false ("not_implemented", False)
+			create l_project.make_from_path ("D:\prod\eifmate")
+			assert_string_contains ("has_eifmate", l_project.path, "D:\prod\eifmate")
+
 		end
 
 end

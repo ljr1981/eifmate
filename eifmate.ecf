@@ -37,6 +37,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<library name="testing_ext" location="D:\prod\testing_ext\testing_ext.ecf"/>
 		<cluster name="test" location=".\testing\" recursive="true"/>
 	</target>
 	<target name="eifmate_cli" extends="eifmate_tests">

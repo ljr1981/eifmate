@@ -28,7 +28,7 @@ feature -- Test routines
 			l_json_value := l_json.parse (l_json_content.validity_json)
 			check attached l_json.parse (l_json_content.validity_json) as al_json_value then
 				assert ("object?", al_json_value.is_object)
-				assert_strings_equal_diff ("contents", l_json_content.validity_json, al_json_value.to_pretty_json + {STRING_32} "%N")
+				assert_strings_equal_diff ("contents", l_json_content.validity_json, al_json_value.to_pretty_json) -- + {STRING_32} "%N")
 			end
 
 		end

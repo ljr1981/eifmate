@@ -105,10 +105,10 @@ feature {NONE} -- Implementation
 			create Result.make (10)
 
 			-- Build findstr command
-			create l_cmd.make (128)
+			create l_cmd.make (256)
 			l_cmd.append ("cmd /c %"cd /d ")
 			l_cmd.append (project_path)
-			l_cmd.append (" && findstr /S /M /C:%"AI-TODO%" *.e%"")
+			l_cmd.append (" && dir /s /b *.e | C:\\Windows\\System32\\findstr.exe /F:/ /N /C:$AI-TODO$%"") -- $AI-TODO-IGNORE$
 
 			-- Create process using factory
 			create l_factory
@@ -172,48 +172,36 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	parse_file_for_todos (a_file_path: READABLE_STRING_32)
-			-- Parse single file for AI-TODO items
-		require
-			file_path_not_empty: not a_file_path.is_empty
-		local
-			l_file: PLAIN_TEXT_FILE
-			l_line: STRING_32
-			l_line_number: INTEGER
-			l_todo_item: EM_AI_TODO_ITEM
-		do
-			create l_file.make_with_name (a_file_path)
+	parse_file_for_todos (a_line: READABLE_STRING_32)
+	        -- Parse findstr output line: filepath:line_number:content
+	    require
+	        line_not_empty: not a_line.is_empty
+	    local
+	        l_parts: LIST [READABLE_STRING_32]
+	        l_file_path, l_todo_text: STRING_32
+	        l_line_number: INTEGER
+	        l_todo_item: EM_AI_TODO_ITEM
+	    do
+	        -- Split on first two colons: path:line:content
+	        l_parts := a_line.split (':')
 
-			if l_file.exists and then l_file.is_readable then
-				l_file.open_read
+	        if l_parts.count >= 3 then
+	            l_file_path := l_parts[1] + ":" + l_parts[2]
+	            l_line_number := l_parts[3].to_integer
 
-				from
-					l_line_number := 1
-				until
-					l_file.end_of_file
-				loop
-					l_file.read_line
-					l_line := l_file.last_string
+	            -- Remainder is todo text (rejoin if content had colons)
+	            create l_todo_text.make_empty
+	            across 3 |..| l_parts.count as ic loop
+	                if ic > 3 then l_todo_text.append (":") end
+	                l_todo_text.append (l_parts[ic])
+	            end
 
-					if contains_ai_todo (l_line) then
-						l_todo_item := extract_todo_item (a_file_path, l_line_number, l_line)
-						last_scan_results.extend (l_todo_item)
-					end
-
-					l_line_number := l_line_number + 1
-				end
-
-				l_file.close
-			else
-				-- File not accessible
-				if last_error = Void then
-					create last_error.make_from_string ("Cannot read file: ")
-					if attached last_error as al then
-						al.append (a_file_path)
-					end
-				end
-			end
-		end
+	            if l_todo_text.has_substring ("$AI-TODO$") and not l_todo_text.has_substring ("$AI-TODO-IGNORE$") then -- $AI-TODO-IGNORE$
+	                create l_todo_item.make (l_file_path, l_line_number, l_todo_text.twin)
+	                last_scan_results.extend (l_todo_item)
+	            end
+	        end
+	    end
 
 	contains_ai_todo (a_line: STRING_32): BOOLEAN
 			-- Does line contain AI-TODO marker?

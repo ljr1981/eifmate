@@ -1,5 +1,6 @@
 {
   "ec_path": "C:\\Program Files\\Eiffel Software\\EiffelStudio 25.02 Standard\\studio\\spec\\win64\\bin\\ec.exe",
   "default_timeout_seconds": 300,
-  "obsidian_path": "C:\\Users\\LJR19\\OneDrive\\Documents\\Obsidian Vault\\Eiffel\\eifmate"
+  "obsidian_path": "C:\\Users\\LJR19\\OneDrive\\Documents\\Obsidian Vault\\Eiffel\\eifmate",
+  "ai_prompt_prefix": "be very concise in your responses and number of files created:"
 }

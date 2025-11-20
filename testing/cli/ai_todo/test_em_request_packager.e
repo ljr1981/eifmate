@@ -6,34 +6,34 @@ class
 	TEST_EM_REQUEST_PACKAGER
 
 inherit
-	EQA_TEST_SET
+	TEST_SET_BASE_WITH_CONSTANTS
 
 feature -- Test routines
 
 	test_packager_initialization
-			-- Test packager creates properly
+			-- Test packager creates properly with config paths
 		note
 			testing: "covers/{EM_REQUEST_PACKAGER}.make"
 		local
 			l_packager: EM_REQUEST_PACKAGER
 		do
-			create l_packager.make ("C:\project", "C:\vault")
+			create l_packager.make (test_project_root, obsidian_path)
 			assert ("packager_created", l_packager /= Void)
 			assert ("scanner_attached", l_packager.scanner /= Void)
 			assert ("bridge_attached", l_packager.bridge /= Void)
 		end
 
 	test_response_processor_initialization
-			-- Test response processor creates properly
+			-- Test response processor creates properly with config paths
 		note
 			testing: "covers/{EM_RESPONSE_PROCESSOR}.make"
 		local
 			l_processor: EM_RESPONSE_PROCESSOR
 		do
-			create l_processor.make ("C:\project", "C:\vault")
+			create l_processor.make (test_project_root, obsidian_path)
 			assert ("processor_created", l_processor /= Void)
 			assert ("project_path_set", 
-					l_processor.project_path.same_string ("C:\project"))
+					l_processor.project_path.same_string (test_project_root))
 			assert ("bridge_attached", l_processor.bridge /= Void)
 		end
 

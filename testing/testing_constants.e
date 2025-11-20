@@ -32,6 +32,12 @@ feature -- Access
 			Result := config_string ("test_external_target")
 		end
 
+	obsidian_path: STRING_32
+			-- Path to Obsidian vault for AI-TODO workflow
+		once
+			Result := config_string ("obsidian_path")
+		end
+
 feature {NONE} -- Implementation
 
 	Config_filename: STRING_32

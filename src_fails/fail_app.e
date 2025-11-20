@@ -7,7 +7,7 @@ note
 class
 	FAIL_APP
 
-feature -- Initialization
+feature -- fail features
 
 	my_not_a_feature_fail
 			--	Rule	Description	Location	Position	Severity	
@@ -29,6 +29,14 @@ feature -- Initialization
 		do
 			do_nothing
 			not_a_feature
+		end
+
+feature -- references
+
+
+	is_a_feature
+		do
+			do_nothing
 		end
 
 end

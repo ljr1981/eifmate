@@ -259,6 +259,7 @@ feature -- EC Action Commands
 
 	ec_flat (a_config, a_target, a_project_path, a_class_name: READABLE_STRING_GENERAL)
 			-- Generate flat view of `a_class_name`.
+			-- EXAMPLE: ec -flat FAIL_APP -config eifmate.ecf -target eifmate_broken -batch -project_path d:\prod\eifmate
 		require
 			config_attached: a_config /= Void
 			target_attached: a_target /= Void
@@ -284,7 +285,7 @@ feature -- EC Action Commands
 		ensure
 			output_captured: last_output /= Void
 		end
-		
+
 feature -- Tuple Wrappers (Agent Helpers)
 
 	ec_quick_melt_tuple (a_tuple: TUPLE [config, target, project_path: STRING_32])

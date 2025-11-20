@@ -126,12 +126,11 @@ feature {NONE} -- Implementation
 	current_timestamp: STRING_32
 			-- Generate current timestamp
 		local
-			l_date_time: DATE_TIME
+			l_dt: DATE_TIME
 		do
 
-			create l_date_time.make_now
-
-			Result := l_date_time.out.to_string_32
+			create l_dt.make_now
+			Result := l_dt.formatted_out ("YYYYMMDD_HHMMSS")
 		ensure
 			result_not_empty: not Result.is_empty
 		end

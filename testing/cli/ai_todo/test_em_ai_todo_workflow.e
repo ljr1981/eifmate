@@ -43,6 +43,27 @@ feature -- Test routines
 	        end
 	    end
 
+	PROCESS_request_package
+			-- Actually scan the entire project looking for the todo items.
+		note
+			testing: "covers/{EM_REQUEST_PACKAGER}.create_request_package"
+		local
+			l_packager: EM_REQUEST_PACKAGER
+			l_success: BOOLEAN
+		do
+			-- Initialize packager with test paths
+			create l_packager.make (test_project_root, obsidian_path)
+
+			-- Create request package
+			l_success := l_packager.create_request_package
+
+			-- Validate results
+			assert ("package_created", l_success)
+			assert ("has_request_id", l_packager.last_request_id /= Void)
+			assert ("no_error", l_packager.last_error = Void)
+		end
+
+
 	test_create_mock_01_request_package
 			-- Test creating request package for MOCK_01
 		note

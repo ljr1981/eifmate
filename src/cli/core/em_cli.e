@@ -15,7 +15,8 @@ inherit
 	EM_CONSTANTS
 
 create
-	make
+	make,
+	make_with_default_ec_path
 
 feature {NONE} -- Initialization
 
@@ -27,10 +28,25 @@ feature {NONE} -- Initialization
 			error_parser_ready: error_parser /= Void
 		end
 
+	make_with_default_ec_path (a_default_ec_path: attached like default_ec_path)
+			-- Initialize CLI with `a_default_ec_path'.
+		do
+			make
+			set_default_ec_path (a_default_ec_path)
+		end
+
 feature -- Access
 
 	error_parser: EM_ERROR_PARSER
 			-- Error output parser
+
+feature -- Settings
+
+	set_default_ec_path (a_path: attached like default_ec_path)
+			--
+		do
+			default_ec_path := a_path
+		end
 
 feature -- Operations
 
@@ -150,7 +166,7 @@ feature {NONE} -- Implementation: Helpers
 			-- Solves VUTA(2) by avoiding self-reference during creation.
 		local
 			l_temp: EM_COMPILER
-		do
+		attribute
 			create l_temp.make
 			Result := l_temp.ec_executable_path
 		end
